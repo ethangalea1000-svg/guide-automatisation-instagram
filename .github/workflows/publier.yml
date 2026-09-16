@@ -1,0 +1,32 @@
+name: Publier sur Instagram
+
+on:
+  schedule:
+    - cron: '0 17 * * *'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Publier le post du jour
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
+        run: node scripts/publish.js
+      - name: Sauver le statut publié et le journal
+        run: |
+          git config user.name "auto-publish-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add content/calendrier.json content/journal.json
+          git commit -m "Post publié $(date +%F)" || echo "rien à committer"
+          git push
