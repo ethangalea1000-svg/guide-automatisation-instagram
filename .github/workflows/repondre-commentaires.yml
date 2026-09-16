@@ -1,0 +1,32 @@
+name: Répondre aux commentaires
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  repondre:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Traiter les commentaires
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/repondre-commentaires.js
+      - name: Sauver le journal et l'historique
+        run: |
+          git config user.name "auto-comment-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add content/journal.json content/commentaires-traites.json
+          git commit -m "Traitement commentaires $(date +%F-%H%M)" || echo "rien à committer"
+          git push
