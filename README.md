@@ -6,7 +6,7 @@ Ce dépôt explique comment automatiser la publication de contenu et la gestion 
 ## Ce que fait le système
 
 1. **Planification** (`scripts/planifier.js`) — génère chaque semaine une liste de sujets de contenu via une IA, et les ajoute à un calendrier.
-2. **Publication** (`scripts/publish.js`) — chaque jour, génère une légende + une image via IA pour le sujet du jour, publie sur Instagram, et poste un premier commentaire (hashtags + question d'engagement) pour maximiser la portée.
+2. **Publication** (`scripts/publish.js`) — chaque jour, génère une légende + une image via IA pour le sujet du jour, publie sur Instagram, et publie uniquement les posts dont `approuve` vaut explicitement `true` ; le premier commentaire automatique est désactivé par défaut.
 3. **Réponse aux commentaires** (`scripts/repondre-commentaires.js`) — toutes les heures, lit les nouveaux commentaires, les classe (normal / sensible), répond automatiquement aux commentaires normaux, et déclenche une alerte humaine pour les commentaires sensibles plutôt que de tout automatiser.
 4. **Rafraîchissement de token** (`.github/workflows/refresh-token.yml`) — les tokens Instagram expirent au bout de 60 jours ; ce workflow les renouvelle automatiquement deux fois par mois.
 
@@ -46,4 +46,4 @@ Par défaut (accès Standard), l'API Instagram ne permet de lire/répondre qu'au
 
 ## Avertissement
 
-Ce projet publie du contenu de façon autonome sans validation humaine avant publication — c'est un choix assumé pour ce cas d'usage, mais réfléchis à ce qui est approprié pour ton propre contexte, en particulier si ton compte touche des sujets sensibles (santé, finance, sujets réglementés). La gestion des commentaires sensibles (détresse, harcèlement) mérite une vraie réflexion sur les ressources d'aide à afficher et sur l'escalade humaine — ne laisse jamais ce type de situation entièrement automatisée sans supervision.
+Ce projet peut automatiser la publication, mais le modèle fourni exige une approbation explicite (`approuve: true`) avant chaque publication — c'est un choix assumé pour ce cas d'usage, mais réfléchis à ce qui est approprié pour ton propre contexte, en particulier si ton compte touche des sujets sensibles (santé, finance, sujets réglementés). La gestion des commentaires sensibles (détresse, harcèlement) mérite une vraie réflexion sur les ressources d'aide à afficher et sur l'escalade humaine — ne laisse jamais ce type de situation entièrement automatisée sans supervision.
