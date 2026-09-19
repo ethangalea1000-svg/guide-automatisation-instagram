@@ -7,7 +7,7 @@ const calendrier = JSON.parse(fs.readFileSync(CALENDRIER_PATH, 'utf8'));
 const journal = fs.existsSync(JOURNAL_PATH) ? JSON.parse(fs.readFileSync(JOURNAL_PATH, 'utf8')) : [];
 
 // Active/désactive le premier commentaire automatique (hashtags + question d'engagement)
-const PREMIER_COMMENTAIRE_ACTIF = true;
+const PREMIER_COMMENTAIRE_ACTIF = false;
 
 function ajouterAuJournal(type, contenu, decision, raison) {
   journal.push({ date: new Date().toISOString(), type, contenu, decision, raison });
@@ -16,7 +16,7 @@ function ajouterAuJournal(type, contenu, decision, raison) {
 
 // Rattrape le post le plus ancien en attente, même si sa date est déjà passée
 const post = calendrier
-  .filter(p => p.date <= TODAY && p.statut === 'en_attente')
+  .filter(p => p.date <= TODAY && p.statut === 'en_attente' && p.approuve === true)
   .sort((a, b) => a.date.localeCompare(b.date))[0];
 
 if (!post) {
@@ -64,7 +64,6 @@ function validateCaption(legende, hashtags) {
       hashtags.some(tag => typeof tag !== 'string' || !/^#[\p{L}\p{N}_]{1,50}$/u.test(tag))) {
     throw new Error('Hashtags IA invalides');
   }
-  // Adapte cette liste de termes à éviter selon ta propre thématique
   const unsafe = /\b(terme_sensible_1|terme_sensible_2)\b/i;
   if (unsafe.test(legende)) throw new Error('Contenu sensible détecté : publication annulée');
 }
