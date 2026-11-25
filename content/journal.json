@@ -481,5 +481,12 @@
     "contenu": "Aucun post en attente",
     "decision": "Rien à faire",
     "raison": "Calendrier vide ou tout déjà publié"
+  },
+  {
+    "date": "2026-11-25T01:11:50.284Z",
+    "type": "Publication",
+    "contenu": "Aucun post en attente",
+    "decision": "Rien à faire",
+    "raison": "Calendrier vide ou tout déjà publié"
   }
 ]
